@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Media;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -30,10 +31,14 @@ namespace Sudoku
         private Label congratsl;
         private Label congratst;
         private PictureBox congratsp;
+        private TextBox textAbout;
+        private TextBox textMethods;
         private Button hintb;
+        private Button buttonShowAbout;
+        private Button buttonMethods;
         private SoundPlayer yay;
         private SoundPlayer music;
- 
+
 
         private List<List<string>> matrica; //matrica igre
         private List<List<string>> gmatrica; // generirana matrica (rješeni sudoku)
@@ -128,6 +133,13 @@ namespace Sudoku
             this.Controls.Remove(congratsp);
 
             biljeske = String.Empty;
+
+            if (Controls.Contains(buttonShowAbout))
+                Controls.Remove(buttonShowAbout);
+            if (Controls.Contains(buttonMethods))
+                Controls.Remove(buttonMethods);
+            Controls.Remove(textAbout);
+            Controls.Remove(textMethods);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -856,9 +868,126 @@ namespace Sudoku
             gumb.FlatAppearance.BorderColor = Color.DarkRed;
         }
 
-        private void showAbout(object sender, EventArgs e)
+        private void buttonAbout_Click(object sender, EventArgs e)
         {
+            //da se prikaze neki window na desno
+            clear_All();
 
+            buttonShowAbout = new Button();
+            buttonMethods = new Button();
+
+            // button show about Sudoku
+            buttonShowAbout.Name = "buttonAbout";
+            buttonShowAbout.Text = "ABOUT SUDOKU";
+            buttonShowAbout.Size = this.button1.Size;
+            buttonShowAbout.AutoSize = false;
+            buttonShowAbout.BackColor = Color.Black;
+            buttonShowAbout.ForeColor = Color.DarkRed;
+            buttonShowAbout.FlatAppearance.BorderColor = Color.DarkRed;
+            buttonShowAbout.FlatAppearance.BorderSize = 5;
+            buttonShowAbout.FlatStyle = FlatStyle.Flat;
+            buttonShowAbout.TextAlign = ContentAlignment.MiddleCenter;
+            buttonShowAbout.Font = new Font("Algerian", 22);
+
+            buttonShowAbout.Location = new Point(700, button1.Location.Y);
+
+            buttonShowAbout.Click += new EventHandler(buttonShowAbout_Click);
+            buttonShowAbout.MouseEnter += new EventHandler(gumb_MouseEnter);
+            buttonShowAbout.MouseLeave += new EventHandler(gumb_MouseLeave);
+            this.Controls.Add(buttonShowAbout);
+
+            // button show methods
+            buttonMethods.Name = "buttonMethods";
+            buttonMethods.Text = "SHOW METHODS";
+            buttonMethods.Size = this.button1.Size;
+
+            buttonMethods.AutoSize = false;
+            buttonMethods.BackColor = Color.Black;
+            buttonMethods.ForeColor = Color.DarkRed;
+            buttonMethods.FlatAppearance.BorderColor = Color.DarkRed;
+            buttonMethods.FlatAppearance.BorderSize = 5;
+            buttonMethods.FlatStyle = FlatStyle.Flat;
+            buttonMethods.TextAlign = ContentAlignment.MiddleCenter;
+            buttonMethods.Font = new Font("Algerian", 22);
+
+            buttonMethods.Location = new Point(700 + buttonShowAbout.Width + 10 , button1.Location.Y);
+
+            buttonMethods.Click += new EventHandler(buttonMethods_Click);
+            buttonMethods.MouseEnter += new EventHandler(gumb_MouseEnter);
+            buttonMethods.MouseLeave += new EventHandler(gumb_MouseLeave);
+            this.Controls.Add(buttonMethods);
+        }
+
+        private void buttonShowAbout_Click(object sender, EventArgs e)
+        {
+            if(Controls.Contains(textMethods))
+                Controls.Remove(textMethods);
+            textAbout = new TextBox();
+            textAbout.Name = "textAbout";
+
+            textAbout.Multiline = true;
+            textAbout.ScrollBars = ScrollBars.Vertical;
+
+            textAbout.Text = "Sudoku: A Puzzling Enigma" + Environment.NewLine + Environment.NewLine +
+                "Sudoku is a captivating and widely popular number puzzle that has enthralled enthusiasts around the globe. Originating in the late 18th century, the modern version we know today emerged in the 1970s in Japan. The name \"Sudoku\" is a combination of two Japanese words, \"su\" (meaning number) and \"doku\" (meaning single), reflecting the puzzle's fundamental objective: to fill the grid with single digits." + Environment.NewLine + Environment.NewLine +
+                "Rules of Sudoku:" + Environment.NewLine + Environment.NewLine +
+                "The game consists of a 9x9 grid, further divided into 3x3 subgrids. The challenge lies in strategically placing numbers from 1 to 9 in a way that each row, each column, and each 3x3 subgrid contains all the digits exactly once. The initial puzzle comes with some numbers pre-filled, serving as clues for the player to deduce and complete the grid." + Environment.NewLine + Environment.NewLine +
+                "Solving Strategy:" + Environment.NewLine + Environment.NewLine +
+                "Sudoku is a game of logic, requiring no mathematical skills. Players use deductive reasoning to fill in the missing numbers, eliminating possibilities based on the existing clues. The puzzle requires concentration, pattern recognition, and careful decision-making." + Environment.NewLine + Environment.NewLine +
+                "History:" + Environment.NewLine + Environment.NewLine +
+                "The roots of Sudoku trace back to Switzerland, where mathematician Leonhard Euler created a precursor in the 18th century. However, the modern version we know today was popularized by the Japanese puzzle company Nikoli in the 20th century. It gained international acclaim in the early 2000s, becoming a fixture in newspapers, books, and online platforms." + Environment.NewLine + Environment.NewLine +
+                "Popularity and Variations:" + Environment.NewLine + Environment.NewLine +
+                "Sudoku's popularity can be attributed to its accessibility and universal appeal. The puzzle transcends language barriers and is enjoyed by people of all ages. Variations, including larger grids and irregularly shaped subgrids, add depth to the Sudoku experience, catering to both casual players and seasoned enthusiasts." + Environment.NewLine + Environment.NewLine +
+                "Conclusion:" + Environment.NewLine + Environment.NewLine +
+                "Sudoku stands as a testament to the enduring appeal of logic puzzles. Its elegant simplicity, coupled with the mental challenge it offers, has secured its place as a beloved pastime worldwide. Whether played with a pencil and paper or on digital platforms, Sudoku continues to captivate minds and provide a satisfying mental workout for puzzle enthusiasts everywhere.";
+
+
+            textAbout.Size = new Size(1000,300);
+            textAbout.Location = new Point(700, buttonShowAbout.Location.Y + 150);
+            textAbout.Font = new Font("Algerian", 16);
+            textAbout.BackColor = Color.Black;
+            textAbout.ForeColor = Color.DarkRed;
+            textAbout.BorderStyle = BorderStyle.None;
+
+            this.Controls.Add(textAbout);
+        }
+
+        private void buttonMethods_Click(object sender, EventArgs e)
+        {
+            if (Controls.Contains(textAbout))
+                Controls.Remove(textAbout);
+            textMethods = new TextBox();
+            textMethods.Name = "textMethods";
+
+            textMethods.Multiline = true;
+            textMethods.ScrollBars = ScrollBars.Vertical;
+
+            textMethods.Text = "Sudoku Solving Methods: From Simple to Complex" + Environment.NewLine + Environment.NewLine +
+                   "Easy Solving Methods:" + Environment.NewLine +
+                   "1. Single Possibility (Naked Single): Identify cells where only one digit can fit based on the existing numbers in the row, column, and subgrid." + Environment.NewLine +
+                   "2. Elimination (Naked Pairs, Triples, etc.): Look for rows, columns, or subgrids where only two or three cells can contain specific digits, eliminating those digits from other cells in the same unit." + Environment.NewLine +
+                   "3. Block and Column/Row Interactions: If a number is confined to a particular block (3x3 subgrid) within a row or column, eliminate that number from the rest of the row or column." + Environment.NewLine + Environment.NewLine +
+
+                   "Intermediate Solving Methods:" + Environment.NewLine +
+                   "1. Hidden Singles: Examine each row, column, and subgrid to find cells where a number can only fit in one position, even though other numbers are present." + Environment.NewLine +
+                   "2. Locked Candidates: Identify instances where a number is confined to a row or column within a subgrid, eliminating that number from the rest of the row or column in the subgrid." + Environment.NewLine +
+                   "3. Naked Subsets: Look for groups of cells in a unit (row, column, or subgrid) where a set of numbers can only exist within that group, eliminating those numbers from other cells in the unit." + Environment.NewLine + Environment.NewLine +
+
+                   "Advanced Solving Methods:" + Environment.NewLine +
+                   "1. X-Wing: Identify a pattern where a digit appears exactly twice in two rows and two columns, forming a rectangle. This allows you to eliminate the digit from other cells in the corresponding rows and columns." + Environment.NewLine +
+                   "2. Swordfish: A more complex version of X-Wing, where a digit appears in three rows and three columns, forming a 'swordfish' pattern. This allows you to eliminate the digit from other cells in the corresponding rows and columns." + Environment.NewLine +
+                   "3. Coloring (Two-Coloring): Use two colors to identify chains of cells connected by the same candidate. If a contradiction is reached, eliminate the candidate from the common cells." + Environment.NewLine +
+                   "4. Chaining Techniques (XY-Wing, XYZ-Wing, etc.): Advanced methods involving chains of cells and candidates that lead to deductions. These techniques are more intricate and require a deep understanding of the puzzle.";
+
+
+            textMethods.Size = new Size(1000, 300);
+            textMethods.Location = new Point(700, buttonShowAbout.Location.Y + 150);
+            textMethods.Font = new Font("Algerian", 16);
+            textMethods.BackColor = Color.Black;
+            textMethods.ForeColor = Color.DarkRed;
+            textMethods.BorderStyle = BorderStyle.None;
+
+            this.Controls.Add(textMethods);
         }
     }
 }
